@@ -15,6 +15,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include "opencv2/calib3d/calib3d.hpp"
 
+#include <opencv2/core/types_c.h>
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/calib3d.hpp"
@@ -32,9 +33,11 @@ int main() {
 	// Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200823_234943.jpg");
 	// Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200823_234957.jpg");
 
-	Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/IMG_0364.JPG");
-	Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/IMG_0364_CUT.png");
+	// Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/IMG_0364.JPG");
+	// Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/IMG_0364_CUT.png");
 
+	Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/1.jpg");
+	Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/2.jpg");
 
 	InputArray pt = cv::_InputArray::_InputArray(photo);
 	InputArray cpt = cv::_InputArray::_InputArray(childphoto);
@@ -147,11 +150,23 @@ int main() {
 	int n = round(matches.size()*0.15);
 	// int n = 10;
 	for (int i = 0; i < n; i++) {
-		goodmatches.push_back(matches.at(i));
-		printf("Distance: %.6f\n", goodmatches.at(i).distance);
+		goodmatches.push_back(matches[i]);
+		// printf("Distance: %.6f, Child: %d: x: %f - y: %f, Main: %d: x: %f - y: %f \n", goodmatches.at(i).distance, goodmatches.at(i).queryIdx, keypointchild.at(goodmatches.at(i).queryIdx).pt.x, keypointchild.at(goodmatches.at(i).queryIdx).pt.y, goodmatches.at(i).trainIdx, keypoint.at(goodmatches.at(i).trainIdx).pt.x, keypoint.at(goodmatches.at(i).trainIdx).pt.y);
+		// printf("Distance: %.6f\n", goodmatches.at(i).distance);
+		printf("Distance: %.6f, Child: %d, Main: %d:\n", goodmatches.at(i).distance, goodmatches.at(i).queryIdx, goodmatches.at(i).trainIdx);
 	}
 
 
+	/*
+	for (int i = 0; i < matches.size(); i++) {
+		if (matches.at(i).distance < 3 * min_dist) {
+			goodmatches.push_back(matches[i]);
+			printf("Distance: %.6f, Child: %d, Main: %d:\n", goodmatches.at(i).distance, goodmatches.at(i).queryIdx, goodmatches.at(i).trainIdx);
+		}
+	}
+	*/
+
+	printf("Size of good match: %d\n", goodmatches.size());
 
 
 	// drawMatches(pt, keypoint, cpt, keypointchild, goodmatches, OutImg);
@@ -161,15 +176,67 @@ int main() {
 	printf("Draw matches sucessful\n");
 
 
+
+	/*
 	namedWindow("Display window", WINDOW_AUTOSIZE);// Create a window for display.
 	imshow("Display window", OutImg);                   // Show our image inside it.
 	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/final_out_16.jpg", OutImg);
+	*/
 
 	// now to match it
 
 	// M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 2)
 	
-	// findHomography()
+	//-- Localize the object
+	vector<Point2f> scene;
+	vector<Point2f> scenechild;
+	
+	printf("Size of good match: %d\n", goodmatches.size());
+
+	for (int i = 0; i < goodmatches.size(); i++)
+	{
+		//-- Get the keypoints from the good matches
+		printf("iter: %d\n", i);
+		scene.push_back(keypoint[goodmatches[i].queryIdx].pt);
+		scenechild.push_back(keypointchild[goodmatches[i].trainIdx].pt);
+	}
+
+	printf("Get keypoint successful\n");
+
+	Mat H = findHomography(scenechild, scene, RANSAC);
+
+	//-- Get the corners from the image_1 ( the object to be "detected" )
+	vector<Point2f> scenechild_corners(4);
+	vector<Point2f> scene_corners(4);
+	/*
+	scenechild_corners[0].x = 0;
+	scenechild_corners[0].y = 0;
+	scenechild_corners[1].x = cpt.cols;
+	scenechild_corners[1].y = 0;
+	scenechild_corners[2].x = cpt.cols;
+	scenechild_corners[2].y = cpt.rows;
+	scenechild_corners[3].x = 0;
+	scenechild_corners[3].y = cpt.rows;
+	*/
+
+	scenechild_corners[0] = cvPoint(0, 0);
+	scenechild_corners[1] = cvPoint(childphoto.cols, 0);
+	scenechild_corners[2] = cvPoint(childphoto.cols, childphoto.rows);
+	scenechild_corners[3] = cvPoint(0, childphoto.rows);
+	
+	printf("Get corner sucessful\n");
+
+	perspectiveTransform(scenechild_corners, scene_corners, H);
+
+	//-- Draw lines between the corners (the mapped object in the scene - image_2 )
+	line(OutImg, scene_corners[0] + Point2f(childphoto.cols, 0), scene_corners[1] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
+	line(OutImg, scene_corners[1] + Point2f(childphoto.cols, 0), scene_corners[2] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
+	line(OutImg, scene_corners[2] + Point2f(childphoto.cols, 0), scene_corners[3] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
+	line(OutImg, scene_corners[3] + Point2f(childphoto.cols, 0), scene_corners[0] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
+
+	namedWindow("Display window", WINDOW_AUTOSIZE);// Create a window for display.
+	imshow("Display window", OutImg);                   // Show our image inside it.
+	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/final_out_19.jpg", OutImg);
 
 	waitKey(0);
 
