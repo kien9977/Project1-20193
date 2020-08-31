@@ -1,0 +1,10 @@
+﻿  OpenCVTest.cpp
+c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(147): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(67): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(67): note: consider using '%zd' in the format string
+c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(70): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(70): note: consider using '%zd' in the format string
+c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(122): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(122): note: consider using '%zd' in the format string
+  OpenCVTest.vcxproj -> C:\Users\kien.nm173206\documents\visual studio 2015\Projects\OpenCVTest\x64\Debug\OpenCVTest.exe
+  OpenCVTest.vcxproj -> C:\Users\kien.nm173206\documents\visual studio 2015\Projects\OpenCVTest\x64\Debug\OpenCVTest.pdb (Full PDB)
