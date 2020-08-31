@@ -1,9 +1,5 @@
 ﻿  OpenCVTest.cpp
 c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(150): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(232): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(233): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(234): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(235): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(70): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
   c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(70): note: consider using '%zd' in the format string
 c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(73): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'

@@ -229,14 +229,20 @@ int main() {
 	perspectiveTransform(scenechild_corners, scene_corners, H);
 
 	//-- Draw lines between the corners (the mapped object in the scene - image_2 )
+	/*
 	line(OutImg, scene_corners[0] + Point2f(childphoto.cols, 0), scene_corners[1] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
 	line(OutImg, scene_corners[1] + Point2f(childphoto.cols, 0), scene_corners[2] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
 	line(OutImg, scene_corners[2] + Point2f(childphoto.cols, 0), scene_corners[3] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
 	line(OutImg, scene_corners[3] + Point2f(childphoto.cols, 0), scene_corners[0] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
+	*/
+	line(OutImg, scene_corners[0], scene_corners[1], Scalar(0, 255, 0), 4);
+	line(OutImg, scene_corners[1], scene_corners[2], Scalar(0, 255, 0), 4);
+	line(OutImg, scene_corners[2], scene_corners[3], Scalar(0, 255, 0), 4);
+	line(OutImg, scene_corners[3], scene_corners[0], Scalar(0, 255, 0), 4);
 
 	namedWindow("Display window", WINDOW_AUTOSIZE);// Create a window for display.
 	imshow("Display window", OutImg);                   // Show our image inside it.
-	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/final_out_19.jpg", OutImg);
+	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/final_out_20.jpg", OutImg);
 
 	waitKey(0);
 
