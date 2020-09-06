@@ -1,2 +1,17 @@
-﻿  OpenCVTest.vcxproj -> C:\Users\kien.nm173206\documents\visual studio 2015\Projects\OpenCVTest\x64\Debug\OpenCVTest.exe
+﻿  OpenCVTest.cpp
+c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(156): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(157): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(74): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(74): note: consider using '%zd' in the format string
+c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(77): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(77): note: consider using '%zd' in the format string
+c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(131): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(131): note: consider using '%zd' in the format string
+c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(169): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(169): note: consider using '%zd' in the format string
+c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(202): warning C4473: 'printf' : not enough arguments passed for format string
+  c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(202): note: placeholders and their parameters expect 1 variadic arguments, but 0 were provided
+  c:\users\kien.nm173206\documents\visual studio 2015\projects\opencvtest\opencvtest\opencvtest.cpp(202): note: the missing variadic argument 1 is required by format string '%d'
+  LINK : C:\Users\kien.nm173206\documents\visual studio 2015\Projects\OpenCVTest\x64\Debug\OpenCVTest.exe not found or not built by the last incremental link; performing full link
+  OpenCVTest.vcxproj -> C:\Users\kien.nm173206\documents\visual studio 2015\Projects\OpenCVTest\x64\Debug\OpenCVTest.exe
   OpenCVTest.vcxproj -> C:\Users\kien.nm173206\documents\visual studio 2015\Projects\OpenCVTest\x64\Debug\OpenCVTest.pdb (Full PDB)

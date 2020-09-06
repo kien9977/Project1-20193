@@ -8,6 +8,7 @@
 // https://medium.com/data-breach/introduction-to-sift-scale-invariant-feature-transform-65d7f3a72d40
 // https://github.com/kanika2018/Object-Recognition-using-SIFT/blob/master/object_recog_SIFT.py
 // https://docs.opencv.org/2.4/doc/tutorials/features2d/feature_homography/feature_homography.html
+// https://stackoverflow.com/questions/52425355/how-to-detect-multiple-objects-with-opencv-in-c
 #include <opencv2/features2d.hpp>
 #include <opencv2/core/mat.hpp>
 #include "opencv2/core/core.hpp"
@@ -30,9 +31,13 @@ bool comparator(DMatch a, DMatch b)
 }
 
 int main() {
-	Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200823_234943.jpg");
-	Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200823_234957.jpg");
+	// Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200823_234943.jpg");
+	// Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200823_234957.jpg");
 
+	
+
+	Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200906_161407.jpg");
+	Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200906_161327.jpg");
 	// Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/IMG_0364.JPG");
 	// Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/IMG_0364_CUT.png");
 
@@ -72,24 +77,24 @@ int main() {
 	siftchild->detectAndCompute(cpt, noArray(), keypointchild, descriptorchild, false);
 	printf("Another photo have: %d keypoints\n", keypointchild.size());
 
-	/*
+	
 	// draw keypoint
 	Mat img_keypoints;
 	drawKeypoints(pt, keypoint, img_keypoints);
 	namedWindow("Display window", WINDOW_AUTOSIZE);		// Create a window for display.
 	imshow("Display window", img_keypoints);                   // Show our image inside it.
 
-	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/IMG_0364_out.jpg", img_keypoints);
+	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/20200906_161407_out.jpg", img_keypoints);
 
 	Mat img_keypoints1;
 	drawKeypoints(cpt, keypointchild, img_keypoints1);
 	namedWindow("Display window", WINDOW_AUTOSIZE);		// Create a window for display.
 	imshow("Display window", img_keypoints1);                   // Show our image inside it.
 
-	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/IMG_0364_out_1.jpg", img_keypoints1);
+	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/20200906_161327_out.jpg", img_keypoints1);
 
 	// end
-	*/
+	
 
 	// BFMatcher bf = BFMatcher(NORM_L1, false);
 
@@ -159,18 +164,10 @@ int main() {
 		// printf("Distance: %.6f\n", goodmatches.at(i).distance);
 		printf("Distance: %.6f, Child: %d, Main: %d:\n", goodmatches.at(i).distance, goodmatches.at(i).queryIdx, goodmatches.at(i).trainIdx);
 	}
-	printf("Avg match\n");
-	for (int i = n; i < m; i++) {
-		avgmatches.push_back(matches[i]);
-		// printf("Distance: %.6f, Child: %d, Main: %d:\n", avgmatches.at(i-n).distance, avgmatches.at(i).queryIdx, avgmatches.at(i).trainIdx);
-	}
-	printf("Bad match\n");
-	for (int i = m; i < matches.size(); i++) {
-		badmatches.push_back(matches[i]);
-		// printf("Distance: %.6f, Child: %d, Main: %d:\n", badmatches.at(i).distance, badmatches.at(i).queryIdx, badmatches.at(i).trainIdx);
-	}
 
 
+
+	printf("Size of good match: %d\n", goodmatches.size());
 	/*
 	for (int i = 0; i < matches.size(); i++) {
 		if (matches.at(i).distance < 3 * min_dist) {
@@ -179,10 +176,6 @@ int main() {
 		}
 	}
 	*/
-
-	printf("Size of good match: %d\n", goodmatches.size());
-	printf("Size of average match: %d\n", avgmatches.size());
-	printf("Size of bad match: %d\n", badmatches.size());
 
 
 	// drawMatches(pt, keypoint, cpt, keypointchild, goodmatches, OutImg);
@@ -256,102 +249,10 @@ int main() {
 	line(OutImg, scene_corners[3], scene_corners[0], Scalar(0, 255, 0), 4);
 
 
-	printf("Average match: %d\n");
-	scene.empty();
-	scenechild.empty();
-
-	for (int i = 0; i < avgmatches.size(); i++)
-	{
-		//-- Get the keypoints from the good matches
-		scene.push_back(keypoint[avgmatches[i].queryIdx].pt);
-		scenechild.push_back(keypointchild[avgmatches[i].trainIdx].pt);
-	}
-
-	printf("Get keypoint successful\n");
-
-	H = findHomography(scenechild, scene, RANSAC);
-
-	//-- Get the corners from the image_1 ( the object to be "detected" )
-	/*
-	scenechild_corners[0].x = 0;
-	scenechild_corners[0].y = 0;
-	scenechild_corners[1].x = cpt.cols;
-	scenechild_corners[1].y = 0;
-	scenechild_corners[2].x = cpt.cols;
-	scenechild_corners[2].y = cpt.rows;
-	scenechild_corners[3].x = 0;
-	scenechild_corners[3].y = cpt.rows;
-	*/
-
-	scenechild_corners[0] = cvPoint(0, 0);
-	scenechild_corners[1] = cvPoint(childphoto.cols, 0);
-	scenechild_corners[2] = cvPoint(childphoto.cols, childphoto.rows);
-	scenechild_corners[3] = cvPoint(0, childphoto.rows);
-
-	printf("Get corner sucessful\n");
-
-	perspectiveTransform(scenechild_corners, scene_corners, H);
-
-	//-- Draw lines between the corners (the mapped object in the scene - image_2 )
-	/*
-	line(OutImg, scene_corners[0] + Point2f(childphoto.cols, 0), scene_corners[1] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
-	line(OutImg, scene_corners[1] + Point2f(childphoto.cols, 0), scene_corners[2] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
-	line(OutImg, scene_corners[2] + Point2f(childphoto.cols, 0), scene_corners[3] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
-	line(OutImg, scene_corners[3] + Point2f(childphoto.cols, 0), scene_corners[0] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
-	*/
-	line(OutImg, scene_corners[0], scene_corners[1], Scalar(0, 255, 255), 4);
-	line(OutImg, scene_corners[1], scene_corners[2], Scalar(0, 255, 255), 4);
-	line(OutImg, scene_corners[2], scene_corners[3], Scalar(0, 255, 255), 4);
-	line(OutImg, scene_corners[3], scene_corners[0], Scalar(0, 255, 255), 4);
-
-	printf("Bad match: %d\n");
-	scene.empty();
-	scenechild.empty();
-	for (int i = 0; i < badmatches.size(); i++)
-	{
-		//-- Get the keypoints from the good matches
-		scene.push_back(keypoint[badmatches[i].queryIdx].pt);
-		scenechild.push_back(keypointchild[badmatches[i].trainIdx].pt);
-	}
-
-	printf("Get keypoint successful\n");
-
-	H = findHomography(scenechild, scene, RANSAC);
-	/*
-	scenechild_corners[0].x = 0;
-	scenechild_corners[0].y = 0;
-	scenechild_corners[1].x = cpt.cols;
-	scenechild_corners[1].y = 0;
-	scenechild_corners[2].x = cpt.cols;
-	scenechild_corners[2].y = cpt.rows;
-	scenechild_corners[3].x = 0;
-	scenechild_corners[3].y = cpt.rows;
-	*/
-
-	scenechild_corners[0] = cvPoint(0, 0);
-	scenechild_corners[1] = cvPoint(childphoto.cols, 0);
-	scenechild_corners[2] = cvPoint(childphoto.cols, childphoto.rows);
-	scenechild_corners[3] = cvPoint(0, childphoto.rows);
-
-	printf("Get corner sucessful\n");
-
-	perspectiveTransform(scenechild_corners, scene_corners, H);
-
-	//-- Draw lines between the corners (the mapped object in the scene - image_2 )
-	/*
-	line(OutImg, scene_corners[0] + Point2f(childphoto.cols, 0), scene_corners[1] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
-	line(OutImg, scene_corners[1] + Point2f(childphoto.cols, 0), scene_corners[2] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
-	line(OutImg, scene_corners[2] + Point2f(childphoto.cols, 0), scene_corners[3] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
-	line(OutImg, scene_corners[3] + Point2f(childphoto.cols, 0), scene_corners[0] + Point2f(childphoto.cols, 0), Scalar(255, 0, 0), 4);
-	*/
-	line(OutImg, scene_corners[0], scene_corners[1], Scalar(0, 0, 255), 4);
-	line(OutImg, scene_corners[1], scene_corners[2], Scalar(0, 0, 255), 4);
-	line(OutImg, scene_corners[2], scene_corners[3], Scalar(0, 0, 255), 4);
-	line(OutImg, scene_corners[3], scene_corners[0], Scalar(0, 0, 255), 4);
-
+	
 	namedWindow("Display window", WINDOW_AUTOSIZE);// Create a window for display.
 	imshow("Display window", OutImg);                   // Show our image inside it.
-	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/final_out_23.jpg", OutImg);
+	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/final_out_24.jpg", OutImg);
 
 	waitKey(0);
 
