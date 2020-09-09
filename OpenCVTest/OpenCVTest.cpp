@@ -429,7 +429,7 @@ int main() {
 	printf("Found: %d object in picture\n", countobj);
 	namedWindow("Display window", WINDOW_AUTOSIZE);// Create a window for display.
 	imshow("Display window", OutImg);                   // Show our image inside it.
-	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/final_out_51.jpg", OutImg);
+	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/final_out_52.jpg", OutImg);
 
 	waitKey(0);
 
