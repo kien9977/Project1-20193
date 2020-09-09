@@ -114,7 +114,6 @@ int main() {
 
 	vector<corner> location;
 
-	/*
 	string bigfile;
 	string smallfile;
 
@@ -125,28 +124,6 @@ int main() {
 
 	Mat photo = imread(bigfile);
 	Mat childphoto = imread(smallfile);
-	*/
-
-	// Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200823_234943.jpg");
-	// Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200823_234957.jpg");
-
-	// Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200906_161411.jpg");
-	// Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200906_161327.jpg");
-
-
-
-	// Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200907_022100.jpg");
-	// Mat mainphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200907_022100.jpg");
-	// Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200906_161327.jpg");
-
-	// Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/IMG_0364.JPG");
-	// Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/IMG_0364_CUT.png");
-
-	// Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/IMG_0365.JPG");
-	// Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/20200906_161327.jpg");
-
-	Mat photo = imread("C:/Users/kien.nm173206/Desktop/SIFT/1.jpg");
-	Mat childphoto = imread("C:/Users/kien.nm173206/Desktop/SIFT/2.jpg");
 
 	InputArray pt = cv::_InputArray::_InputArray(photo);
 	InputArray cpt = cv::_InputArray::_InputArray(childphoto);
@@ -155,17 +132,10 @@ int main() {
 	InputArray maskchild = cv::_InputArray::_InputArray();
 
 	vector<KeyPoint> keypoint, keypointchild;
-	/*
-	OutputArray descriptor = cv::_OutputArray::_OutputArray();
-	OutputArray descriptorchild = cv::_OutputArray::_OutputArray();
-	*/
+
 
 	Mat descriptor, descriptorchild;
-	/*
-	sift = cv.SIFT_create()
-	kp = sift.detect(gray,None)
-	img=cv.drawKeypoints(gray,kp,img)
-	*/
+
 
 
 
@@ -181,37 +151,18 @@ int main() {
 	siftchild->detectAndCompute(cpt, noArray(), keypointchild, descriptorchild, false);
 	printf("Another photo have: %d keypoints\n", keypointchild.size());
 
-	/*
-	// draw keypoint
-	Mat img_keypoints;
-	drawKeypoints(pt, keypoint, img_keypoints);
-	namedWindow("Display window", WINDOW_AUTOSIZE);		// Create a window for display.
-	imshow("Display window", img_keypoints);                   // Show our image inside it.
-
-	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/20200906_161407_out.jpg", img_keypoints);
-
-	Mat img_keypoints1;
-	drawKeypoints(cpt, keypointchild, img_keypoints1);
-	namedWindow("Display window", WINDOW_AUTOSIZE);		// Create a window for display.
-	imshow("Display window", img_keypoints1);                   // Show our image inside it.
-
-	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/20200906_161327_out.jpg", img_keypoints1);
-
-	// end
-	*/
 
 
 	vector<DMatch> matches;
 
 	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
-	// Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::FLANNBASED);
 
 
 	matcher->match(descriptor, descriptorchild, matches);
 
 	double max_dist = 0; double min_dist = 100;
 
-	//-- Quick calculation of max and min distances between keypoints
+	// Quick calculation of max and min distances between keypoints
 	for (int i = 0; i < descriptor.rows; i++)
 	{
 		double dist = matches[i].distance;
@@ -231,13 +182,7 @@ int main() {
 	//sort matches
 	std::sort(matches.begin(), matches.end(), comparator);
 
-	//append first 20% to goodmatch
-	/*
-	good = []
-	for m,n in matches:
-	if m.distance < 0.75*n.distance:
-	good.append([m])
-	*/
+	//append first 15% to goodmatch
 	int n = round(matches.size()*0.15);
 	// int m = round(matches.size()*0.5);
 	// int n = 10;
@@ -251,33 +196,29 @@ int main() {
 	printf("Size of good match: %d\n", goodmatches.size());
 
 
-	// drawMatches(pt, keypoint, cpt, keypointchild, goodmatches, OutImg);
-
 	drawMatches(pt, keypoint, cpt, keypointchild, goodmatches, OutImg, Scalar::all(-1), Scalar::all(-1), vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 
 	printf("Draw matches sucessful\n");
 
 	// now to match it
 
-	// M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 2)
 
-	//-- Localize the object
+	// Localize the object
 	vector<Point2f> scene;
 	vector<Point2f> scenechild;
 
 	for (int i = 0; i < goodmatches.size(); i++)
 	{
-		//-- Get the keypoints from the good matches
+		// Get the keypoints from the good matches
 		scene.push_back(keypoint[goodmatches[i].queryIdx].pt);
 		scenechild.push_back(keypointchild[goodmatches[i].trainIdx].pt);
 	}
 
 	printf("Get keypoint 1 successful\n");
 
-	// Mat H = findHomography(scenechild, scene, RANSAC);
 	Mat H = findHomography(scenechild, scene, RANSAC);
 
-	//-- Get the corners from the image_1 ( the object to be "detected" )
+	// Get the corners from the image_1 ( the object to be "detected" )
 	vector<Point2f> scenechild_corners(4);
 	vector<Point2f> scene_corners(4);
 	scenechild_corners[0] = cvPoint(0, 0);
@@ -321,7 +262,7 @@ int main() {
 	}
 	printf("Get corner 1 sucessful\n");
 
-	//blur img to avoid keypoint generation
+	// blur img to avoid keypoint generation
 	MyPolygon(photo, sc[0], sc[1], sc[3], sc[2]);
 	imwrite("C:/Users/kien.nm173206/Desktop/SIFT/temp.jpg", photo);
 
